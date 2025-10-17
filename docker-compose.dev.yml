@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tester-monitoring-backend-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./backend/src:/app/src
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATA_DIR=/app/data
+      - CONFIG_FILE=/app/data/config.json
+      - LOG_LEVEL=debug
+      - LOG_FILE=/app/logs/app.log
+      - MAX_CONCURRENT_REQUESTS=5
+      - REQUEST_TIMEOUT=10000
+    command: ["bun", "run", "src/server.ts"]
+    networks:
+      - monitoring-network
+
+networks:
+  monitoring-network:
+    driver: bridge

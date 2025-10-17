@@ -1,0 +1,13 @@
+{
+  "testers": [
+    {
+      "id": "ist13",
+      "display_name": "IST13",
+      "url": "http://192.168.140.114:8080"
+    }
+  ],
+  "displaySettings": {
+    "testersPerRow": 3,
+    "refreshInterval": 15
+  }
+}

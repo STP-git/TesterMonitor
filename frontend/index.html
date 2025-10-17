@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tester Monitoring System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title">Tester Monitoring System</h1>
+            <div class="header-actions">
+                <button id="refresh-btn" class="btn btn-secondary" title="Refresh all testers">
+                    <span class="icon">🔄</span>
+                    Refresh
+                </button>
+                <button id="config-btn" class="btn btn-primary" title="Configuration">
+                    <span class="icon">⚙️</span>
+                    Config
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Menu Bar -->
+        <aside id="menu-bar" class="menu-bar">
+            <div class="menu-header">
+                <button id="menu-toggle" class="menu-toggle" title="Toggle menu">
+                    <span class="icon">☰</span>
+                </button>
+                <h2 class="menu-title">Menu</h2>
+            </div>
+            
+            <nav class="menu-nav">
+                <ul class="menu-list">
+                    <li class="menu-item active">
+                        <a href="#" class="menu-link" data-page="monitoring">
+                            <span class="menu-icon">📊</span>
+                            <span class="menu-text">Tester Monitoring</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" data-page="configuration">
+                            <span class="menu-icon">⚙️</span>
+                            <span class="menu-text">Configuration</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" data-page="settings">
+                            <span class="menu-icon">🔧</span>
+                            <span class="menu-text">Settings</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" data-page="about">
+                            <span class="menu-icon">ℹ️</span>
+                            <span class="menu-text">About</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Monitoring Page -->
+            <div id="monitoring-page" class="page active">
+                <!-- Tester Selection Panel -->
+                <section class="tester-selection">
+                    <div class="selection-header">
+                        <h3>Select Testers to Monitor</h3>
+                        <span id="selected-count" class="selected-count">0 selected</span>
+                    </div>
+                    <div id="tester-checkboxes" class="tester-checkboxes">
+                        <!-- Testers will be populated here -->
+                    </div>
+                    <div class="selection-actions">
+                        <button id="select-all-btn" class="btn btn-secondary">Select All</button>
+                        <button id="deselect-all-btn" class="btn btn-secondary">Deselect All</button>
+                        <button id="monitor-btn" class="btn btn-primary" disabled>Start Monitoring</button>
+                    </div>
+                </section>
+
+                <!-- Status Bar -->
+                <section class="status-bar">
+                    <div class="status-info">
+                        <span class="status-item">
+                            <span class="status-label">Last Update:</span>
+                            <span id="last-update" class="status-value">Never</span>
+                        </span>
+                        <span class="status-item">
+                            <span class="status-label">Connections:</span>
+                            <span id="connection-count" class="status-value">0</span>
+                        </span>
+                        <span class="status-item">
+                            <span class="status-label">Status:</span>
+                            <span id="system-status" class="status-value status-connected">Connected</span>
+                        </span>
+                    </div>
+                </section>
+
+                <!-- Testers Grid -->
+                <section class="testers-grid-container">
+                    <div id="testers-grid" class="testers-grid">
+                        <!-- Tester cards will be populated here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Configuration Page -->
+            <div id="configuration-page" class="page">
+                <div class="page-header">
+                    <h2>Configuration</h2>
+                </div>
+                
+                <!-- Testers Configuration -->
+                <section class="config-section">
+                    <h3>Testers</h3>
+                    <div id="testers-list" class="testers-list">
+                        <!-- Testers will be populated here -->
+                    </div>
+                    <button id="add-tester-btn" class="btn btn-primary">Add New Tester</button>
+                </section>
+
+                <!-- Display Settings -->
+                <section class="config-section">
+                    <h3>Display Settings</h3>
+                    <div class="form-group">
+                        <label for="testers-per-row">Testers per row:</label>
+                        <select id="testers-per-row" class="form-control">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="refresh-interval">Refresh interval (seconds):</label>
+                        <input type="number" id="refresh-interval" class="form-control" min="15" value="15">
+                        <small class="form-help">Minimum: 15 seconds</small>
+                    </div>
+                    <div class="form-actions">
+                        <button id="save-settings-btn" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="page">
+                <div class="page-header">
+                    <h2>Settings</h2>
+                </div>
+                <p>Settings page content coming soon...</p>
+            </div>
+
+            <!-- About Page -->
+            <div id="about-page" class="page">
+                <div class="page-header">
+                    <h2>About</h2>
+                </div>
+                <div class="about-content">
+                    <h3>Tester Monitoring System</h3>
+                    <p>Version: 1.0.0</p>
+                    <p>A lightweight real-time monitoring dashboard for tracking tester status by scraping data from multiple tester URLs.</p>
+                    
+                    <h4>Features:</h4>
+                    <ul>
+                        <li>Real-time monitoring with Server-Sent Events</li>
+                        <li>Configurable dashboard layout</li>
+                        <li>Tester management through UI</li>
+                        <li>Auto-refresh with configurable intervals</li>
+                        <li>Responsive design</li>
+                    </ul>
+                    
+                    <h4>Technology Stack:</h4>
+                    <ul>
+                        <li>Backend: Bun with Alpine Linux</li>
+                        <li>Frontend: Vanilla HTML/CSS/JavaScript</li>
+                        <li>Web Scraping: Axios + Cheerio</li>
+                        <li>Real-time: Server-Sent Events</li>
+                        <li>Storage: JSON configuration</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Configuration Modal -->
+    <div id="config-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add Tester</h3>
+                <button id="modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="tester-form">
+                    <div class="form-group">
+                        <label for="tester-id">ID:</label>
+                        <input type="text" id="tester-id" class="form-control" required>
+                        <small class="form-help">Unique identifier for the tester</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="tester-display-name">Display Name:</label>
+                        <input type="text" id="tester-display-name" class="form-control" required>
+                        <small class="form-help">Name displayed in the dashboard</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="tester-url">URL:</label>
+                        <input type="url" id="tester-url" class="form-control" required>
+                        <small class="form-help">URL of the tester's status page</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="modal-save" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- JavaScript -->
+    <script src="js/api.js"></script>
+    <script src="js/sse.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
