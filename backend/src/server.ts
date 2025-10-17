@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import fs from 'fs';
 import { configManager } from './config';
 import { webScraper } from './scraper';
 import { sseManager } from './sse';
@@ -11,7 +13,11 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('../frontend'));
+
+// Serve frontend files in development mode only
+if (process.env.NODE_ENV === 'development') {
+  app.use(express.static('./frontend'));
+}
 
 // Store latest data
 let latestTestData: Map<string, TesterData> = new Map();
@@ -329,10 +335,23 @@ app.get('/api/events', (req, res) => {
   });
 });
 
-// Serve frontend for all other routes
-app.get('*', (req, res) => {
-  res.sendFile('../frontend/index.html');
+// Handle 404 for API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: {
+      code: 'NOT_FOUND',
+      message: 'API endpoint not found'
+    }
+  });
 });
+
+// Serve frontend for all other routes in development mode only
+if (process.env.NODE_ENV === 'development') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve('./frontend/index.html'));
+  });
+}
 
 // Data fetching function
 async function fetchAllTesterData(): Promise<void> {

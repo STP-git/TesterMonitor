@@ -27,16 +27,48 @@ This system provides a unified dashboard to monitor the status of multiple teste
 
 ## Quick Start
 
+### Option 1: Automated Setup (Recommended)
+
+1. Clone the repository
+2. Run the setup script to pre-download Docker images
+3. Start the services
+4. Access the application
+
+**Windows:**
+```bash
+git clone <repository-url>
+cd tester-monitoring
+setup.bat
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+**Linux/macOS:**
+```bash
+git clone <repository-url>
+cd tester-monitoring
+chmod +x setup.sh
+./setup.sh
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+### Option 2: Manual Setup
+
 1. Clone the repository
 2. Configure environment variables
-3. Start with Docker Compose
-4. Access the application
+3. Pre-download Docker images
+4. Start the services
 
 ```bash
 git clone <repository-url>
 cd tester-monitoring
 cp .env.example .env
-docker-compose up -d
+
+# Pre-download images
+docker pull oven/bun:alpine
+docker pull nginx:alpine
+
+# Start services
+docker-compose -f docker-compose.dev.yml up -d
 ```
 
 Access the application at `http://localhost:3000`
