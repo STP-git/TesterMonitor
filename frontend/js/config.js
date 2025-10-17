@@ -37,12 +37,13 @@ class ConfigManager {
       if (response.success) {
         console.log('Configuration saved:', this.config);
         return true;
+      } else {
+        throw new Error(response.error?.message || 'Failed to save configuration');
       }
     } catch (error) {
       console.error('Failed to save configuration:', error);
       throw error;
     }
-    return false;
   }
 
   getTesters() {
@@ -107,9 +108,11 @@ class ConfigManager {
   async updateDisplaySettings(settings) {
     try {
       this.config.displaySettings = { ...this.config.displaySettings, ...settings };
-      const success = await this.saveConfig();
-      if (success) {
+      const response = await api.updateConfig(this.config);
+      if (response.success) {
         return this.config.displaySettings;
+      } else {
+        throw new Error(response.error?.message || 'Failed to update display settings');
       }
     } catch (error) {
       console.error('Failed to update display settings:', error);
