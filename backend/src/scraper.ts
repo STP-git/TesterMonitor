@@ -160,7 +160,7 @@ export class WebScraper {
   }
 
   private normalizeStatus(status: string): string {
-    if (!status) return 'available';
+    if (!status) return 'AVAILABLE';
     
     const normalized = status.toLowerCase().trim();
     
@@ -173,12 +173,13 @@ export class WebScraper {
     if (normalized.includes('error')) return 'FAILED';
     if (normalized.includes('complete')) return 'PASSED';
     if (normalized.includes('done')) return 'PASSED';
-    if (normalized.includes('idle')) return 'available';
+    if (normalized.includes('idle')) return 'AVAILABLE';
     if (normalized.includes('wait')) return 'TESTING';
     if (normalized.includes('pending')) return 'TESTING';
-    if (normalized.includes('available')) return 'available';
-    if (normalized.includes('free')) return 'available';
-    if (normalized.includes('ready')) return 'available';
+    if (normalized.includes('available')) return 'AVAILABLE';
+    if (normalized.includes('free')) return 'AVAILABLE';
+    if (normalized.includes('ready')) return 'AVAILABLE';
+    if (normalized.includes('unknown')) return 'AVAILABLE';
     
     // Return original status in uppercase if no mapping found
     return status.toUpperCase();

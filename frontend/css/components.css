@@ -210,7 +210,7 @@
 }
 
 .status-badge.available {
-  background-color: var(--status-available);
+  background-color: var(--gray-400);
   color: white;
 }
 
@@ -311,7 +311,7 @@
 }
 
 .slot-card-status.available {
-  background-color: var(--status-available);
+  background-color: var(--gray-400);
   color: white;
 }
 

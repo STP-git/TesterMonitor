@@ -313,8 +313,45 @@ class App {
   updateSingleTesterCard(testerData) {
     const existingCard = document.querySelector(`[data-tester-id="${testerData.testerId}"]`);
     if (existingCard) {
-      const newCard = ui.createTesterCard(testerData);
-      existingCard.replaceWith(newCard);
+      // Clear the existing card content before updating
+      const cardContent = existingCard.querySelector('.tester-card-content');
+      if (cardContent) {
+        cardContent.innerHTML = '';
+        // Add the new slot cards
+        cardContent.innerHTML = testerData.slots.map(slot => ui.createSlotCard(slot)).join('');
+      }
+      
+      // Update the status badges
+      const statusContainer = existingCard.querySelector('.tester-card-status');
+      if (statusContainer) {
+        // Update the available badge if needed
+        const existingAvailableBadge = statusContainer.querySelector('.status-badge.available');
+        if (testerData.summary.available > 0 && !existingAvailableBadge) {
+          // Add available badge if it doesn't exist
+          const availableBadge = document.createElement('div');
+          availableBadge.className = 'status-badge available';
+          availableBadge.innerHTML = `
+            <span class="status-badge-label">AVAILABLE</span>
+            <span class="status-badge-value">${testerData.summary.available}</span>
+          `;
+          statusContainer.appendChild(availableBadge);
+        } else if (testerData.summary.available === 0 && existingAvailableBadge) {
+          // Remove available badge if count is 0
+          existingAvailableBadge.remove();
+        }
+        
+        // Update all badge values
+        const badges = statusContainer.querySelectorAll('.status-badge');
+        badges.forEach(badge => {
+          const badgeClass = badge.className.split(' ').find(c => c !== 'status-badge');
+          if (badgeClass && testerData.summary[badgeClass] !== undefined) {
+            const valueElement = badge.querySelector('.status-badge-value');
+            if (valueElement) {
+              valueElement.textContent = testerData.summary[badgeClass];
+            }
+          }
+        });
+      }
     } else {
       // Card doesn't exist, update the entire grid
       this.updateTestersGrid();

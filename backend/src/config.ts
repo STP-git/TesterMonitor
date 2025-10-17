@@ -55,9 +55,18 @@ export class ConfigManager {
     try {
       this.validateConfig(config);
       
+      // Ensure the directory exists
+      const dir = path.dirname(this.configPath);
+      try {
+        await fs.access(dir);
+      } catch {
+        await fs.mkdir(dir, { recursive: true });
+      }
+      
       const configData = JSON.stringify(config, null, 2);
       await fs.writeFile(this.configPath, configData, 'utf-8');
       this.config = config;
+      console.log(`Configuration saved to ${this.configPath}`);
       return true;
     } catch (error) {
       console.error("Error saving config:", error);

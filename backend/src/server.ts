@@ -57,6 +57,29 @@ app.get('/api/config', async (req, res) => {
 app.put('/api/config', async (req, res) => {
   try {
     const config = req.body;
+    console.log('Received config update request:', config);
+    
+    // Validate the config structure
+    if (!config.testers || !Array.isArray(config.testers)) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid configuration: testers must be an array'
+        }
+      });
+    }
+    
+    if (!config.displaySettings) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid configuration: displaySettings is required'
+        }
+      });
+    }
+    
     const success = await configManager.saveConfig(config);
     
     if (success) {
@@ -80,6 +103,7 @@ app.put('/api/config', async (req, res) => {
       });
     }
   } catch (error) {
+    console.error('Error updating configuration:', error);
     res.status(500).json({
       success: false,
       error: {
