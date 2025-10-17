@@ -39,6 +39,7 @@ class UIManager {
     // Configuration page elements
     this.elements.testersList = document.getElementById('testers-list');
     this.elements.addTesterBtn = document.getElementById('add-tester-btn');
+    this.elements.saveConfigBtn = document.getElementById('save-config-btn');
     this.elements.testersPerRow = document.getElementById('testers-per-row');
     this.elements.refreshInterval = document.getElementById('refresh-interval');
     this.elements.saveSettingsBtn = document.getElementById('save-settings-btn');
@@ -99,6 +100,10 @@ class UIManager {
     // Configuration page actions
     this.elements.addTesterBtn.addEventListener('click', () => {
       this.showTesterModal();
+    });
+
+    this.elements.saveConfigBtn.addEventListener('click', () => {
+      this.emit('ui:saveConfiguration');
     });
 
     this.elements.saveSettingsBtn.addEventListener('click', () => {

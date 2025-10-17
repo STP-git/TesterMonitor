@@ -118,6 +118,16 @@ class App {
       }
     });
 
+    // Save configuration
+    ui.on('ui:saveConfiguration', async () => {
+      try {
+        await configManager.saveConfig();
+        ui.showToast('Configuration saved successfully', 'success');
+      } catch (error) {
+        ui.showToast('Failed to save configuration: ' + error.message, 'error');
+      }
+    });
+
     // Tester management
     ui.on('ui:editTester', (testerId) => {
       const tester = configManager.getTester(testerId);

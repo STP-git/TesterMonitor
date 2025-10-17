@@ -56,12 +56,10 @@ class ConfigManager {
 
   async addTester(tester) {
     try {
-      const response = await api.addTester(tester);
-      if (response.success) {
-        // Add the tester to local config immediately
-        this.config.testers.push(tester);
-        return response.data;
-      }
+      // Just add the tester to local config without calling the API
+      // The save will be done when the user clicks the Save Configuration button
+      this.config.testers.push(tester);
+      return tester;
     } catch (error) {
       console.error('Failed to add tester:', error);
       throw error;
@@ -70,15 +68,14 @@ class ConfigManager {
 
   async updateTester(id, updates) {
     try {
-      const response = await api.updateTester(id, updates);
-      if (response.success) {
-        // Update the tester in local config immediately
-        const testerIndex = this.config.testers.findIndex(t => t.id === id);
-        if (testerIndex !== -1) {
-          this.config.testers[testerIndex] = { ...this.config.testers[testerIndex], ...updates };
-        }
-        return response.data;
+      // Just update the tester in local config without calling the API
+      // The save will be done when the user clicks the Save Configuration button
+      const testerIndex = this.config.testers.findIndex(t => t.id === id);
+      if (testerIndex !== -1) {
+        this.config.testers[testerIndex] = { ...this.config.testers[testerIndex], ...updates };
+        return this.config.testers[testerIndex];
       }
+      throw new Error(`Tester with ID '${id}' not found`);
     } catch (error) {
       console.error('Failed to update tester:', error);
       throw error;
@@ -87,24 +84,22 @@ class ConfigManager {
 
   async deleteTester(id) {
     try {
-      const response = await api.deleteTester(id);
-      if (response.success) {
-        // Remove the tester from local config immediately
-        const testerIndex = this.config.testers.findIndex(t => t.id === id);
-        if (testerIndex !== -1) {
-          this.config.testers.splice(testerIndex, 1);
-        }
+      // Just remove the tester from local config without calling the API
+      // The save will be done when the user clicks the Save Configuration button
+      const testerIndex = this.config.testers.findIndex(t => t.id === id);
+      if (testerIndex !== -1) {
+        this.config.testers.splice(testerIndex, 1);
         // Remove from selected testers if present
         this.selectedTesters.delete(id);
         // Remove from cached data
         this.testersData.delete(id);
         return true;
       }
+      return false;
     } catch (error) {
       console.error('Failed to delete tester:', error);
       throw error;
     }
-    return false;
   }
 
   getDisplaySettings() {

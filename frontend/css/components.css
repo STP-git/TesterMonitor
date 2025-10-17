@@ -416,6 +416,22 @@
   gap: var(--spacing-xs);
 }
 
+/* Config actions */
+.config-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-success {
+  background-color: var(--success-color, #28a745);
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: var(--success-color-dark, #218838);
+}
+
 /* Modal */
 .modal {
   position: fixed;
