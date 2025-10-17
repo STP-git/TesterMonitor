@@ -80,9 +80,9 @@ app.put('/api/config', async (req, res) => {
       });
     }
     
-    const success = await configManager.saveConfig(config);
-    
-    if (success) {
+    try {
+      await configManager.saveConfig(config);
+      
       // Broadcast configuration change
       sseManager.broadcastConfigChange(config);
       
@@ -93,12 +93,14 @@ app.put('/api/config', async (req, res) => {
         success: true,
         message: 'Configuration updated successfully'
       });
-    } else {
+    } catch (saveError) {
+      console.error('Failed to save configuration:', saveError);
       res.status(400).json({
         success: false,
         error: {
           code: 'CONFIG_ERROR',
-          message: 'Failed to update configuration'
+          message: 'Failed to update configuration',
+          details: saveError
         }
       });
     }

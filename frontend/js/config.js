@@ -33,6 +33,8 @@ class ConfigManager {
 
   async saveConfig() {
     try {
+      // We need to send the entire config to the backend
+      // The backend has a PUT /api/config endpoint that accepts the full config
       const response = await api.updateConfig(this.config);
       if (response.success) {
         console.log('Configuration saved:', this.config);

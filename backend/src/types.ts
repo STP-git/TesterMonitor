@@ -25,6 +25,7 @@ export interface TesterData {
     passed: number;
     failed: number;
     aborted: number;
+    available?: number;
   };
 }
 

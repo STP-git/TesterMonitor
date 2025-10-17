@@ -118,7 +118,7 @@ export class ConfigManager {
     } catch (error) {
       console.error("Error saving config:", error);
       console.error("Full error details:", error);
-      return false;
+      throw error; // Instead of returning false, throw the error to properly handle it
     }
   }
 
