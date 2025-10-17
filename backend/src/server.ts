@@ -2,6 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import { configManager } from './config';
 import { webScraper } from './scraper';
 import { sseManager } from './sse';
@@ -16,7 +21,10 @@ app.use(express.json());
 
 // Serve frontend files in development mode only
 if (process.env.NODE_ENV === 'development') {
-  app.use(express.static('./frontend'));
+  // Use absolute path to frontend directory
+  const frontendPath = path.join(__dirname, '../frontend');
+  console.log('Serving static files from:', frontendPath);
+  app.use(express.static(frontendPath));
 }
 
 // Store latest data
@@ -349,7 +357,10 @@ app.use('/api/*', (req, res) => {
 // Serve frontend for all other routes in development mode only
 if (process.env.NODE_ENV === 'development') {
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve('./frontend/index.html'));
+    // Use absolute path to index.html
+    const indexPath = path.join(__dirname, '../frontend/index.html');
+    console.log('Serving index.html from:', indexPath);
+    res.sendFile(indexPath);
   });
 }
 

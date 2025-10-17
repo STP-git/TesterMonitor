@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for Tester Monitoring System",
   "main": "dist/server.js",
+  "type": "module",
   "scripts": {
     "dev": "bun run --watch src/server.ts",
     "build": "bun build src/server.ts --outdir dist --target bun",
