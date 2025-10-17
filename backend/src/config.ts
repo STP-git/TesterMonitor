@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import { join } from "path";
+import path from "path";
 import { Config, Tester, ApiResponse } from "./types";
 
 const CONFIG_FILE_PATH = process.env.CONFIG_FILE || "./data/config.json";
