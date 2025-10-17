@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // @ts-ignore
-const CONFIG_FILE_PATH = process.env.CONFIG_FILE || path.resolve(__dirname, "../data/config.json");
+const CONFIG_FILE_PATH = process.env.CONFIG_FILE || path.resolve(process.cwd(), "data/config.json");
 
 // Log the exact path being used
 console.log(`Config file path: ${CONFIG_FILE_PATH}`);
