@@ -1,5 +1,11 @@
 // Main Application Module - Coordinates all components and handles application logic
 
+// Import modules
+import { api } from './api.js';
+import { sseClient } from './sse.js';
+import { configManager } from './config.js';
+import { ui } from './ui.js';
+
 class App {
   constructor() {
     this.isInitialized = false;

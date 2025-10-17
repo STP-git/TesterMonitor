@@ -158,4 +158,10 @@ class SSEClient {
 }
 
 // Export singleton instance
-export const sseClient = new SSEClient();
+const sseClient = new SSEClient();
+
+// Make it globally available for other modules
+window.sseClient = sseClient;
+
+// Export for module systems
+export { sseClient };

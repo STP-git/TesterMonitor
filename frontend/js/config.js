@@ -1,5 +1,8 @@
 // Configuration Module - Handles application configuration and state
 
+// Import API module
+import { api } from './api.js';
+
 class ConfigManager {
   constructor() {
     this.config = {
@@ -293,4 +296,10 @@ class ConfigManager {
 }
 
 // Export singleton instance
-export const configManager = new ConfigManager();
+const configManager = new ConfigManager();
+
+// Make it globally available for other modules
+window.configManager = configManager;
+
+// Export for module systems
+export { configManager };

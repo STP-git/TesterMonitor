@@ -85,4 +85,10 @@ class ApiClient {
 }
 
 // Export singleton instance
-export const api = new ApiClient();
+const api = new ApiClient();
+
+// Make it globally available for other modules
+window.api = api;
+
+// Export for module systems
+export { api };

@@ -1,5 +1,8 @@
 // UI Module - Handles DOM manipulation and user interface interactions
 
+// Import config module
+import { configManager } from './config.js';
+
 class UIManager {
   constructor() {
     this.elements = {};
@@ -479,4 +482,10 @@ class UIManager {
 }
 
 // Export singleton instance
-export const ui = new UIManager();
+const ui = new UIManager();
+
+// Make it globally available for other modules
+window.ui = ui;
+
+// Export for module systems
+export { ui };
