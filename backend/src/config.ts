@@ -2,10 +2,18 @@
 import { promises as fs } from "fs";
 // @ts-ignore
 import path from "path";
+// @ts-ignore
+import { fileURLToPath } from "url";
 import { Config, Tester, ApiResponse } from "./types";
 
+// Get __dirname equivalent in ES modules
 // @ts-ignore
-const CONFIG_FILE_PATH = process.env.CONFIG_FILE || path.resolve(process.cwd(), "data/config.json");
+const __filename = fileURLToPath(import.meta.url);
+// @ts-ignore
+const __dirname = path.dirname(__filename);
+
+// @ts-ignore
+const CONFIG_FILE_PATH = process.env.CONFIG_FILE || path.resolve(__dirname, "../data/config.json");
 const DEFAULT_CONFIG: Config = {
   testers: [
     {
