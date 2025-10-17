@@ -362,6 +362,18 @@ if (process.env.NODE_ENV === 'development') {
     console.log('Serving index.html from:', indexPath);
     res.sendFile(indexPath);
   });
+} else {
+  // In production, return a simple JSON response for non-API routes
+  // since the frontend is served by nginx
+  app.get('*', (req, res) => {
+    res.status(404).json({
+      success: false,
+      error: {
+        code: 'NOT_FOUND',
+        message: 'Route not found. Frontend is served by nginx in production mode.'
+      }
+    });
+  });
 }
 
 // Data fetching function
