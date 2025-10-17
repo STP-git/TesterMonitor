@@ -259,6 +259,12 @@ class UIManager {
           <span class="status-badge-label">ABORTED</span>
           <span class="status-badge-value">${testerData.summary.aborted}</span>
         </div>
+        ${testerData.summary.available ? `
+        <div class="status-badge available">
+          <span class="status-badge-label">AVAILABLE</span>
+          <span class="status-badge-value">${testerData.summary.available}</span>
+        </div>
+        ` : ''}
       </div>
       <div class="tester-card-content">
         ${testerData.slots.map(slot => this.createSlotCard(slot)).join('')}

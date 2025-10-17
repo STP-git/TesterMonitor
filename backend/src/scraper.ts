@@ -73,6 +73,7 @@ export class WebScraper {
   private extractSlotData(html: string): SlotData[] {
     const $ = cheerio.load(html);
     const slots: SlotData[] = [];
+    const seenSlotIds = new Set<string>();
     
     // Find all slot cards - adjust selector based on actual page structure
     $('.panel').each((index, element) => {
@@ -93,8 +94,9 @@ export class WebScraper {
         const production = this.extractText($(footerElements[0]));
         const project = this.extractText($(footerElements[1]));
         
-        // Only add slot if we have essential data
-        if (slotId) {
+        // Only add slot if we have essential data and haven't seen this ID before
+        if (slotId && !seenSlotIds.has(slotId.trim())) {
+          seenSlotIds.add(slotId.trim());
           slots.push({
             slotId: slotId.trim(),
             status: this.normalizeStatus(status),
@@ -121,9 +123,10 @@ export class WebScraper {
           
           // Look for slot ID in various places
           const slotId = this.extractText($element.find('[class*="chassisname"], [class*="slot-id"], [class*="slot-number"]'))
-                        || this.extractText($element).match(/(SLOT\d+)/i)?.[1];
+                        || this.extractText($element).match(/(SLOT\d+|CHAMBER\d+)/i)?.[1];
           
-          if (slotId) {
+          if (slotId && !seenSlotIds.has(slotId.trim())) {
+            seenSlotIds.add(slotId.trim());
             const status = this.extractText($element.find('[class*="status"], [class*="state"]'));
             const sn = this.extractText($element.find('[class*="sn"], [class*="serial"]'));
             const testTime = this.extractText($element.find('[class*="time"], [class*="duration"]'));
@@ -147,7 +150,7 @@ export class WebScraper {
       });
     }
     
-    console.log(`Extracted ${slots.length} slots from HTML`);
+    console.log(`Extracted ${slots.length} unique slots from HTML`);
     return slots;
   }
 
@@ -157,7 +160,7 @@ export class WebScraper {
   }
 
   private normalizeStatus(status: string): string {
-    if (!status) return 'unknown';
+    if (!status) return 'available';
     
     const normalized = status.toLowerCase().trim();
     
@@ -170,9 +173,12 @@ export class WebScraper {
     if (normalized.includes('error')) return 'FAILED';
     if (normalized.includes('complete')) return 'PASSED';
     if (normalized.includes('done')) return 'PASSED';
-    if (normalized.includes('idle')) return 'UNKNOWN';
+    if (normalized.includes('idle')) return 'available';
     if (normalized.includes('wait')) return 'TESTING';
     if (normalized.includes('pending')) return 'TESTING';
+    if (normalized.includes('available')) return 'available';
+    if (normalized.includes('free')) return 'available';
+    if (normalized.includes('ready')) return 'available';
     
     // Return original status in uppercase if no mapping found
     return status.toUpperCase();
@@ -184,7 +190,8 @@ export class WebScraper {
       failing: 0,
       passed: 0,
       failed: 0,
-      aborted: 0
+      aborted: 0,
+      available: 0
     };
 
     slots.forEach(slot => {
@@ -204,6 +211,9 @@ export class WebScraper {
         case 'ABORTED':
           summary.aborted++;
           break;
+        case 'AVAILABLE':
+          summary.available++;
+          break;
       }
     });
 
@@ -216,8 +226,9 @@ export class WebScraper {
     if (summary.failing > 0) return 'FAILING';
     if (summary.testing > 0) return 'TESTING';
     if (summary.passed > 0 && summary.testing === 0) return 'PASSED';
+    if (summary.available > 0 && summary.testing === 0 && summary.passed === 0) return 'AVAILABLE';
     
-    return 'UNKNOWN';
+    return 'AVAILABLE';
   }
 
   private delay(ms: number): Promise<void> {

@@ -209,6 +209,11 @@
   color: white;
 }
 
+.status-badge.available {
+  background-color: var(--status-available);
+  color: white;
+}
+
 .status-badge-label {
   font-size: var(--font-size-xs);
   opacity: 0.8;
@@ -302,6 +307,11 @@
 
 .slot-card-status.aborted {
   background-color: var(--status-aborted);
+  color: white;
+}
+
+.slot-card-status.available {
+  background-color: var(--status-available);
   color: white;
 }
 
