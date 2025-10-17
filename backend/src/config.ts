@@ -14,6 +14,12 @@ const __dirname = path.dirname(__filename);
 
 // @ts-ignore
 const CONFIG_FILE_PATH = process.env.CONFIG_FILE || path.resolve(__dirname, "../data/config.json");
+
+// Log the exact path being used
+console.log(`Config file path: ${CONFIG_FILE_PATH}`);
+// @ts-ignore
+console.log(`Current working directory: ${process.cwd()}`);
+console.log(`Script directory: ${__dirname}`);
 const DEFAULT_CONFIG: Config = {
   testers: [
     {
@@ -90,6 +96,17 @@ export class ConfigManager {
         // Verify the file was written correctly
         const verifyData = await fs.readFile(this.configPath, 'utf-8');
         console.log(`Verification - file content: ${verifyData}`);
+        
+        // Parse and verify the structure
+        try {
+          const parsedConfig = JSON.parse(verifyData);
+          console.log(`Parsed config contains ${parsedConfig.testers?.length || 0} testers`);
+          if (parsedConfig.testers && parsedConfig.testers.length > 0) {
+            console.log(`Last tester in config:`, parsedConfig.testers[parsedConfig.testers.length - 1]);
+          }
+        } catch (parseError) {
+          console.error(`Failed to parse saved config: ${parseError}`);
+        }
       } catch (writeError) {
         console.error(`Failed to write config file: ${writeError}`);
         console.error(`Error details:`, writeError);
