@@ -21,6 +21,10 @@ COPY . .
 RUN mkdir -p /app/data /app/logs && \
     chown -R bun:nodejs /app/data /app/logs
 
+# Copy initialization script
+COPY scripts/init-data.sh /app/init-data.sh
+RUN chmod +x /app/init-data.sh
+
 # Build the application
 RUN bun run build
 
@@ -34,5 +38,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/api/status || exit 1
 
-# Start the application
-CMD ["bun", "run", "dist/server.js"]
+# Initialize data and start the application
+CMD ["/bin/sh", "-c", "/app/init-data.sh && bun run dist/server.js"]

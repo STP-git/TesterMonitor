@@ -8,8 +8,8 @@ services:
     ports:
       - "${PORT:-3000}:3000"
     volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
+      - data:/app/data
+      - logs:/app/logs
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${PORT:-3000}

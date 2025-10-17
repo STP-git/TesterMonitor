@@ -8,8 +8,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
+      - data:/app/data
+      - logs:/app/logs
       - ./backend/src:/app/src
       - ./frontend:/app/frontend
     environment:
@@ -21,10 +21,16 @@ services:
       - LOG_FILE=/app/logs/app.log
       - MAX_CONCURRENT_REQUESTS=5
       - REQUEST_TIMEOUT=10000
-    command: ["bun", "run", "src/server.ts"]
+    command: ["/bin/sh", "-c", "/app/init-data.sh && bun run src/server.ts"]
     networks:
       - monitoring-network
 
 networks:
   monitoring-network:
     driver: bridge
+
+volumes:
+  data:
+    driver: local
+  logs:
+    driver: local
