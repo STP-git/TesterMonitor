@@ -1,8 +1,11 @@
+// @ts-ignore
 import { promises as fs } from "fs";
+// @ts-ignore
 import path from "path";
 import { Config, Tester, ApiResponse } from "./types";
 
-const CONFIG_FILE_PATH = process.env.CONFIG_FILE || "./data/config.json";
+// @ts-ignore
+const CONFIG_FILE_PATH = process.env.CONFIG_FILE || path.resolve(process.cwd(), "data/config.json");
 const DEFAULT_CONFIG: Config = {
   testers: [
     {
