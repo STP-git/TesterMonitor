@@ -58,7 +58,8 @@ class ConfigManager {
     try {
       const response = await api.addTester(tester);
       if (response.success) {
-        await this.loadConfig(); // Reload config from server
+        // Add the tester to local config immediately
+        this.config.testers.push(tester);
         return response.data;
       }
     } catch (error) {
@@ -71,7 +72,11 @@ class ConfigManager {
     try {
       const response = await api.updateTester(id, updates);
       if (response.success) {
-        await this.loadConfig(); // Reload config from server
+        // Update the tester in local config immediately
+        const testerIndex = this.config.testers.findIndex(t => t.id === id);
+        if (testerIndex !== -1) {
+          this.config.testers[testerIndex] = { ...this.config.testers[testerIndex], ...updates };
+        }
         return response.data;
       }
     } catch (error) {
@@ -84,7 +89,11 @@ class ConfigManager {
     try {
       const response = await api.deleteTester(id);
       if (response.success) {
-        await this.loadConfig(); // Reload config from server
+        // Remove the tester from local config immediately
+        const testerIndex = this.config.testers.findIndex(t => t.id === id);
+        if (testerIndex !== -1) {
+          this.config.testers.splice(testerIndex, 1);
+        }
         // Remove from selected testers if present
         this.selectedTesters.delete(id);
         // Remove from cached data
