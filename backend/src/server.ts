@@ -118,18 +118,27 @@ app.put('/api/config', async (req, res) => {
 // Add tester
 app.post('/api/testers', async (req, res) => {
   try {
+    console.log('POST /api/testers request received');
+    console.log('Request body:', JSON.stringify(req.body));
+    
     const result = await configManager.addTester(req.body);
+    
+    console.log('addTester result:', JSON.stringify(result));
     
     if (result.success) {
       // Broadcast configuration change
+      console.log('Broadcasting configuration change...');
       const config = await configManager.loadConfig();
+      console.log('Loaded config after adding tester:', JSON.stringify(config));
       sseManager.broadcastConfigChange(config);
       
       res.status(201).json(result);
     } else {
+      console.log('addTester failed:', JSON.stringify(result));
       res.status(400).json(result);
     }
   } catch (error) {
+    console.error('Error in POST /api/testers:', error);
     res.status(500).json({
       success: false,
       error: {

@@ -68,19 +68,39 @@ export class ConfigManager {
       
       // Ensure the directory exists
       const dir = path.dirname(this.configPath);
+      console.log(`Config directory: ${dir}`);
+      console.log(`Config file path: ${this.configPath}`);
+      
       try {
         await fs.access(dir);
-      } catch {
+        console.log(`Directory ${dir} is accessible`);
+      } catch (error) {
+        console.log(`Directory ${dir} not accessible, creating it...`);
         await fs.mkdir(dir, { recursive: true });
+        console.log(`Directory ${dir} created`);
       }
       
       const configData = JSON.stringify(config, null, 2);
-      await fs.writeFile(this.configPath, configData, 'utf-8');
+      console.log(`Writing config data: ${configData}`);
+      
+      try {
+        await fs.writeFile(this.configPath, configData, 'utf-8');
+        console.log(`Configuration successfully saved to ${this.configPath}`);
+        
+        // Verify the file was written correctly
+        const verifyData = await fs.readFile(this.configPath, 'utf-8');
+        console.log(`Verification - file content: ${verifyData}`);
+      } catch (writeError) {
+        console.error(`Failed to write config file: ${writeError}`);
+        console.error(`Error details:`, writeError);
+        throw writeError;
+      }
+      
       this.config = config;
-      console.log(`Configuration saved to ${this.configPath}`);
       return true;
     } catch (error) {
       console.error("Error saving config:", error);
+      console.error("Full error details:", error);
       return false;
     }
   }
@@ -98,13 +118,18 @@ export class ConfigManager {
 
   async addTester(tester: Tester): Promise<ApiResponse<Tester>> {
     try {
+      console.log(`Adding tester: ${JSON.stringify(tester)}`);
+      
       if (!this.config) {
+        console.log("Loading config...");
         await this.loadConfig();
+        console.log(`Config loaded: ${JSON.stringify(this.config)}`);
       }
 
       // Check for duplicate ID
       const existingTester = this.config?.testers.find(t => t.id === tester.id);
       if (existingTester) {
+        console.log(`Duplicate tester ID found: ${tester.id}`);
         return {
           success: false,
           error: {
@@ -116,6 +141,7 @@ export class ConfigManager {
 
       // Validate tester data
       if (!tester.id || !tester.display_name || !tester.url) {
+        console.log("Invalid tester data - missing required fields");
         return {
           success: false,
           error: {
@@ -129,6 +155,7 @@ export class ConfigManager {
       try {
         new URL(tester.url);
       } catch {
+        console.log(`Invalid URL format: ${tester.url}`);
         return {
           success: false,
           error: {
@@ -138,8 +165,13 @@ export class ConfigManager {
         };
       }
 
+      console.log(`Adding tester to config. Current testers count: ${this.config!.testers.length}`);
       this.config!.testers.push(tester);
-      await this.saveConfig(this.config!);
+      console.log(`New testers count: ${this.config!.testers.length}`);
+      
+      console.log("Saving config...");
+      const saveResult = await this.saveConfig(this.config!);
+      console.log(`Save result: ${saveResult}`);
 
       return {
         success: true,
@@ -147,6 +179,7 @@ export class ConfigManager {
         data: tester
       };
     } catch (error) {
+      console.error("Error in addTester:", error);
       return {
         success: false,
         error: {
